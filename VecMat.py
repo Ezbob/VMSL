@@ -100,10 +100,10 @@ class vector(object):
 			raise TypeError("Undefined vector operation with " + str(other.__class__))
 	
 	# allowing for commutative addition
-	def __radd__(self,inp):
-		return self.__add__(inp)
+	def __radd__(self, other):
+		return self.__add__(other)
 
-	def __sub__(self,other): # vector and scalar subtraction
+	def __sub__(self, other): # vector and scalar subtraction
 		if isinstance(other, vector):
 			if len(other.coordinates) == len(self.coordinates):
 				tempCoords = []
@@ -121,7 +121,7 @@ class vector(object):
 			raise TypeError("Undefined vector operation with " + str(other.__class__))
 
 	# vector and scalar multiplication
-	def __mul__(self,other):
+	def __mul__(self, other):
 		if isinstance(other, int) or isinstance(other, float): # scalar multi
 			tempCoords = []
 			for x in range(len(self.coordinates)):
@@ -136,12 +136,12 @@ class vector(object):
 			raise TypeError("Undefined vector operation with " + str(other.__class__))
 	
 	# allowing for scalar commutative multiplication
-	def __rmul__(self,inp): 
-		return self.__mul__(inp);
+	def __rmul__(self, other): 
+		return self.__mul__(other);
 
 	# scalar division
-	def __div__(self,other): 
-		if (isinstance(other,int) or isinstance(other,float)) and other != 0: # scalar div
+	def __div__(self, other): 
+		if (isinstance(other, int) or isinstance(other, float)) and other != 0: # scalar div
 			tempCoords = []
 			for x in range(len(self.coordinates)):
 				tempCoords.append(self.coordinates[x]/other) 
@@ -155,11 +155,6 @@ class vector(object):
 	def dimension(self): 
 		return len(self.coordinates)
 
-	def transpose(self):
-		result = []
-		for i in range():
-			result.append(self[i])
-		return result
 
 	# length(norm) of the vector
 	def length(self):
@@ -212,10 +207,10 @@ class matrix(object):
 			result = []
 			if m > 0:
 				for i in range(m):
-					result.append(vector.random(n,mod))	
+					result.append(vector.random(n, mod))
 			else:
 				for i in range(n):
-					result.append(vector.random(n,mod))
+					result.append(vector.random(n, mod))
 			return cls(result)
 		else:
 			raise ValueError("Dimension of identity matrix must be a positve non-zero value") 
