@@ -16,7 +16,7 @@ class vector(object):
 	@classmethod
 	def zeros(cls,n = 1):
 		if n > 0:
-			temp = list()
+			temp = []
 			for i in range(n):
 				temp.append(0.)
 			return cls(temp)
@@ -26,7 +26,7 @@ class vector(object):
 	@classmethod
 	def random(cls,n = 1, mod = 100):
 		if n > 0:
-			temp = list()
+			temp = []
 			for i in range(n):
 				temp.append( (random() * mod) - mod/2 )
 			return cls(temp)
@@ -35,7 +35,7 @@ class vector(object):
 
 	def __init__(self,*cords):
 		if cords == None:
-			self.coordinates = list()
+			self.coordinates = []
 		elif isinstance(cords[0],list):
 			self.coordinates = cords[0]
 		else:
@@ -85,14 +85,14 @@ class vector(object):
 	def __add__(self,other):
 		if isinstance(other, vector): # vector addition
 			if len(other.coordinates) == len(self.coordinates):
-				tempCoords = list()
+				tempCoords = []
 				for x in range(len(self.coordinates)):
 					tempCoords.append(self.coordinates[x] + other.coordinates[x])
 				return vector(tempCoords)
 			else:
 				raise ValueError("Vector dimensions does not match") 
 		elif isinstance(other, int) or isinstance(other,float): # scalar addision
-			tempCoords = list()
+			tempCoords = []
 			for x in range(len(self.coordinates)):
 				tempCoords.append(self.coordinates[x] + other)
 			return vector(tempCoords)
@@ -106,14 +106,14 @@ class vector(object):
 	def __sub__(self,other): # vector and scalar subtraction
 		if isinstance(other, vector):
 			if len(other.coordinates) == len(self.coordinates):
-				tempCoords = list()
+				tempCoords = []
 				for x in range(len(self.coordinates)):
 					tempCoords.append(self.coordinates[x] - other.coordinates[x])
 				return vector(tempCoords)
 			else:
 				raise ValueError("Vector dimensions does not match")
 		elif isinstance(other, int) or isinstance(other,float):
-			tempCoords = list()
+			tempCoords = []
 			for x in range(len(self.coordinates)):
 				tempCoords.append(self.coordinates[x] - other)
 			return vector(tempCoords)
@@ -123,7 +123,7 @@ class vector(object):
 	# vector and scalar multiplication
 	def __mul__(self,other):
 		if isinstance(other, int) or isinstance(other, float): # scalar multi
-			tempCoords = list()
+			tempCoords = []
 			for x in range(len(self.coordinates)):
 				tempCoords.append(self.coordinates[x]*other) 
 			return vector(tempCoords)
@@ -142,7 +142,7 @@ class vector(object):
 	# scalar division
 	def __div__(self,other): 
 		if (isinstance(other,int) or isinstance(other,float)) and other != 0: # scalar div
-			tempCoords = list()
+			tempCoords = []
 			for x in range(len(self.coordinates)):
 				tempCoords.append(self.coordinates[x]/other) 
 			return vector(tempCoords)
@@ -156,7 +156,7 @@ class vector(object):
 		return len(self.coordinates)
 
 	def transpose(self):
-		result = list()
+		result = []
 		for i in range():
 			result.append(self[i])
 		return result
@@ -192,9 +192,9 @@ class matrix(object):
 	@classmethod
 	def identity(cls,n = 1):
 		if (n > 0):
-			result = list()
+			result = []
 			for i in range(n):
-				temp = list()
+				temp = []
 				for j in range(n):
 					if i == j:
 						temp.append(1)
@@ -209,7 +209,7 @@ class matrix(object):
 	@classmethod
 	def random(cls,n = 1, m = 0, mod = 100):
 		if (n > 0):
-			result = list()
+			result = []
 			if m > 0:
 				for i in range(m):
 					result.append(vector.random(n,mod))	
@@ -223,7 +223,7 @@ class matrix(object):
 	@classmethod
 	def zeros(cls,n = 1, m = 0):
 		if (n > 0):
-			result = list()
+			result = []
 			if m > 0:
 				for i in range(m):
 					result.append(vector.zeros(n))
@@ -280,7 +280,7 @@ class matrix(object):
 	def __add__(self, other):
 		if isinstance(other, matrix): # matrix
 			if self.dimensions() == other.dimensions():
-				results = list()
+				results = []
 				for i in range(len(self.columnVectors)):
 					results.append(self[i] + other[i])
 				return matrix(results)
@@ -293,7 +293,7 @@ class matrix(object):
 	def __sub__(self, other):
 		if isinstance(other, matrix):
 			if self.dimensions() == other.dimensions():
-				results = list()
+				results = []
 				for i in range(len(self.columnVectors)):
 					results.append(self.columnVectors[i] - other.columnVectors[i])
 				return matrix(results)
@@ -305,17 +305,17 @@ class matrix(object):
 	# scalar multiplication and simple matrix multiplication
 	def __mul__(self, other):
 		if isinstance(other, int) or isinstance(other, float): # scalar
-			results = list()
+			results = []
 			for i in range(len(self.columnVectors)):
 				results.append(self[i] * other)
 			return matrix(results)
 		elif isinstance(other, matrix): # matrix
 			if self.dimensions()[1] == other.dimensions()[0]:
-				results = list()
+				results = []
 				m = self.dimensions()[1]
 				n = other.dimensions()[1]
 				for i in range(m):
-					tempList = list()
+					tempList = []
 					for j in range(n):
 						tempList.append(self.getRowVector(i)*other[j])
 						if j == n-1:
@@ -328,7 +328,7 @@ class matrix(object):
 				if len(other.coordinates) == self.dimensions()[1]:
 					trans = self.transpose()
 					dim = self.dimensions()[0]
-					results = list()
+					results = []
 					for i in range(dim):
 						results.append(trans[i] * other)
 					return vector(results)
@@ -346,7 +346,7 @@ class matrix(object):
 	# scalar divition
 	def __div__(self, other):
 		if isinstance(other,int) or isinstance(other,float) and other != 0: # scalar
-			results = list()
+			results = []
 			for i in range(len(self.columnVectors)):
 				results.append(self[i] / other)
 			return matrix(results)
@@ -361,15 +361,15 @@ class matrix(object):
 
 	# returns the transpose of this matrix
 	def transpose(self):
-		results = list()
+		results = []
 		for i in range(self.dimensions()[0]):
-			tempList = list()
+			tempList = []
 			results.append(self.getRowVector(i))
 		return matrix(results)
 
 	# returns rows as row vectors
 	def getRowVector(self,index):
-		result = list()
+		result = []
 		for i in range(self.dimensions()[1]):
 			result.append(self[i][index])
 		return vector(result)
