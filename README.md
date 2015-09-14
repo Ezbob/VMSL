@@ -8,4 +8,7 @@ Simply download the ``VecMat.py`` file, include it in your source tree and impor
 `` import ``
 command.
 
+### Contact
+Main contributor: Anders Busch <andersbusch@gmail.com>
+
 This code is released under the MIT license, please read the ``LICENSE`` file for more information.
