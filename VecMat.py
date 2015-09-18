@@ -3,6 +3,7 @@ from math import fsum
 from numbers import Real
 from copy import copy
 from random import random
+from itertools import izip
 
 ## By Anders Busch (2014)
 __author__ = "Anders Busch"
@@ -16,23 +17,19 @@ class vector(object):
 	@classmethod
 	def zeros(cls,n = 1):
 		if n > 0:
-			temp = []
-			for i in range(n):
-				temp.append(0.)
-			return cls(temp)
+			return cls([0 for x in xrange(n)])
 		else:
 			raise ValueError("Dimension of zero vector must be a postive non-zero value")
 
 	@classmethod
 	def random(cls,n = 1, mod = 100):
 		if n > 0:
-			temp = []
-			for i in range(n):
-				temp.append( (random() * mod) - mod/2 )
-			return cls(temp)
+			return cls([(random() * mod) - mod/2 for x in xrange(n)])
 		else:
 			raise ValueError("Dimension of zero vector must be a postive non-zero value")
-
+	def __len__(self):
+		return self.dimension()
+	
 	def __init__(self,*cords):
 		if cords == None:
 			self.coordinates = []
@@ -88,17 +85,11 @@ class vector(object):
 	def __add__(self,other):
 		if isinstance(other, vector): # vector addition
 			if len(other.coordinates) == len(self.coordinates):
-				tempCoords = []
-				for x in range(len(self.coordinates)):
-					tempCoords.append(self.coordinates[x] + other.coordinates[x])
-				return vector(tempCoords)
+				return vector([ x + y for x , y in izip(self.coordinates, other.coordinates) ])
 			else:
 				raise ValueError("Vector dimensions does not match") 
 		elif isinstance(other, int) or isinstance(other,float): # scalar addision
-			tempCoords = []
-			for x in range(len(self.coordinates)):
-				tempCoords.append(self.coordinates[x] + other)
-			return vector(tempCoords)
+			return vector([ x + other for x in self.coordinates ])
 		else:
 			raise TypeError("Undefined vector operation with " + str(other.__class__))
 	
@@ -109,30 +100,21 @@ class vector(object):
 	def __sub__(self, other): # vector and scalar subtraction
 		if isinstance(other, vector):
 			if len(other.coordinates) == len(self.coordinates):
-				tempCoords = []
-				for x in range(len(self.coordinates)):
-					tempCoords.append(self.coordinates[x] - other.coordinates[x])
-				return vector(tempCoords)
+				return vector([ x - y for x , y in izip(self.coordinates, other.coordinates) ])
 			else:
 				raise ValueError("Vector dimensions does not match")
 		elif isinstance(other, int) or isinstance(other,float):
-			tempCoords = []
-			for x in range(len(self.coordinates)):
-				tempCoords.append(self.coordinates[x] - other)
-			return vector(tempCoords)
+			return vector([ x - other for x in self.coordinates ])
 		else:
 			raise TypeError("Undefined vector operation with " + str(other.__class__))
 
 	# vector and scalar multiplication
 	def __mul__(self, other):
 		if isinstance(other, int) or isinstance(other, float): # scalar multi
-			tempCoords = []
-			for x in range(len(self.coordinates)):
-				tempCoords.append(self.coordinates[x]*other) 
-			return vector(tempCoords)
+			return vector([ x * other for x in self.coordinates ])
 		elif isinstance(other, vector): # dot product
 			if len(other.coordinates) == len(self.coordinates):
-				return fsum((self.coordinates[i]*other.coordinates[i]) for i in range(len(self.coordinates)))
+				return fsum((x * y) for x,y in izip(self.coordinates, other.coordinates))
 			else:
 				raise ValueError("Vector dimensions does not match")
 		else:
@@ -145,10 +127,7 @@ class vector(object):
 	# scalar division
 	def __div__(self, other): 
 		if (isinstance(other, int) or isinstance(other, float)) and other != 0: # scalar div
-			tempCoords = []
-			for x in range(len(self.coordinates)):
-				tempCoords.append(self.coordinates[x]/other) 
-			return vector(tempCoords)
+			return vector([x / other for x in self.coordinates])
 		elif other == 0:
 			raise ZeroDivisionError("division with zero error")
 		else:
@@ -158,20 +137,18 @@ class vector(object):
 	def dimension(self): 
 		return len(self.coordinates)
 
-
 	# length(norm) of the vector
 	def length(self):
-		temp = 0
-		for x in range(self.dimension()):
-			temp += self.coordinates[x]**2
-		return sqrt(temp)
+		return sqrt(sum([x ** 2 for x in self.coordinates ]))
 
 	# an alias function for length()
 	def norm(self):
 		return self.length()
+
 	# get the coordiantes
 	def getCoordinates(self):
 		return self.coordinates
+
 	# truncate the vector deleting components
 	def truncate(self,n):
 		if n > 0 and n < len(self.coordinates)+1:
