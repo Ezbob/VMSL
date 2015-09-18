@@ -58,7 +58,10 @@ class vector(object):
 
 	# enables coordination retrival
 	def __getitem__(self,index):
-		return self.coordinates[index]
+		if isinstance(index,slice):
+			return vector(self.coordinates[index])	
+		else:
+			return self.coordinates[index]
 
 	# enables coordination manipulation
 	def __setitem__(self,index,other):
@@ -239,7 +242,7 @@ class matrix(object):
 	
 	# string representation for instance of the class
 	def __repr__(self):
-		results = str()
+		results = ""
 		for i in range(self.dimensions()[0]):
 			results += "["
 			for j in range(self.dimensions()[1]):	
@@ -250,7 +253,13 @@ class matrix(object):
 
 	# acts like a double dimensional list; supporting row and column indexing
 	def __getitem__(self,index):
-		return self.columnVectors[index]
+		if isinstance(index, tuple) and len(index) == 2:
+			if all( isinstance(e, slice) for e in index ):
+				return matrix([ v[index[0]] for v in self.columnVectors[index[1]]])
+			if all( isinstance(e, int) for e in index):
+				return self.columnVectors[index[1]][index[0]]
+		else:
+			return self.columnVectors[index]
 
 	# set column vectors in matrix
 	def __setitem__(self,index,other):
