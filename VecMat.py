@@ -5,6 +5,8 @@ from copy import copy
 from random import random
 from itertools import izip
 
+VM_DEFAULT_SHOW_DIST = 50
+
 ## By Anders Busch (2014)
 __author__ = "Anders Busch"
 ## --Vectors-- ##
@@ -40,7 +42,7 @@ class vector(object):
 		# only real type supported
 		if all(isinstance(elm,Real) for elm in self.coordinates) == False:
 			raise TypeError("Mixed types in vector initialization")
-		self.showDist = 50
+		self.showDist = VM_DEFAULT_SHOW_DIST
 
 	# alternative to the dimension method
 	def __len__(self):
@@ -207,7 +209,7 @@ class matrix(object):
 			self.columnVectors = list(vectors) # only vectors allowed
 		if not all( isinstance(elem, vector) for elem in self.columnVectors ):
 			raise TypeError("Mixed types in matrix initialization")
-		self.showDist = 50
+		self.showDist = VM_DEFAULT_SHOW_DIST
 	
 	# string representation for instance of the class
 	def __repr__(self):
