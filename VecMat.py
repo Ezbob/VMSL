@@ -40,6 +40,7 @@ class vector(object):
 		# only real type supported
 		if all(isinstance(elm,Real) for elm in self.coordinates) == False:
 			raise TypeError("Mixed types in vector initialization")
+		self.showDist = 50
 
 	# alternative to the dimension method
 	def __len__(self):
@@ -51,7 +52,12 @@ class vector(object):
 
 	# string representation of a instance of the vector class
 	def __repr__(self):
-		return "("+ str(self.coordinates).strip("[]") + ")^T"
+		if self.showDist >= len(self.coordinates):  
+			return "("+ str(self.coordinates).strip("[]") + ")^T"
+		elif self.showDist < 0:
+			raise ValueError("Got negative show distance")
+		else:
+			return "vector: members > %i " % self.showDist
 
 	# enables coordination retrival
 	def __getitem__(self,index):
@@ -149,6 +155,9 @@ class vector(object):
 	def getCoordinates(self):
 		return self.coordinates
 
+	def getShowDistance(self):
+		return self.showDist
+
 	# truncate the vector deleting components
 	def truncate(self,n):
 		if n > 0 and n < len(self.coordinates)+1:
@@ -167,45 +176,27 @@ class matrix(object):
 	@classmethod
 	def identity(cls,n = 1):
 		if (n > 0):
-			result = []
-			for i in range(n):
-				temp = []
-				for j in range(n):
-					if i == j:
-						temp.append(1)
-					else:
-						temp.append(0)
-					if j == n-1:
-						result.append(vector(temp))
-			return cls(result)
+			return cls([ vector([ int(x == y) for y in xrange(n) ]) for x in xrange(n)])
 		else:
 			raise ValueError("Dimension of identity matrix must be a positve non-zero value")	
 
 	@classmethod
 	def random(cls,n = 1, m = 0, mod = 100):
 		if (n > 0):
-			result = []
 			if m > 0:
-				for i in range(m):
-					result.append(vector.random(n, mod))
+				return cls([ vector.random(n, mod) for v in xrange(m) ])
 			else:
-				for i in range(n):
-					result.append(vector.random(n, mod))
-			return cls(result)
+				return cls([ vector.random(n, mod) for v in xrange(n) ])
 		else:
 			raise ValueError("Dimension of identity matrix must be a positve non-zero value") 
 
 	@classmethod
-	def zeros(cls,n = 1, m = 0):
+	def zeroes(cls,n = 1, m = 0):
 		if (n > 0):
-			result = []
 			if m > 0:
-				for i in range(m):
-					result.append(vector.zeros(n))
+				return cls([ vector.zeros(n) for v in xrange(m) ])
 			else:
-				for i in range(n):
-					result.append(vector.zeros(n))
-			return cls(result)
+				return cls([ vector.zeros(n) for v in xrange(n) ])
 		else:
 			raise ValueError("Dimension of identity matrix must be a positve non-zero value")
 
@@ -214,11 +205,16 @@ class matrix(object):
 			self.columnVectors = vectors[0]
 		else:
 			self.columnVectors = list(vectors) # only vectors allowed
-		if all(isinstance(elm,vector) for elm in self.columnVectors) == False:
+		if not all( isinstance(elem, vector) for elem in self.columnVectors ):
 			raise TypeError("Mixed types in matrix initialization")
+		self.showDist = 50
 	
 	# string representation for instance of the class
 	def __repr__(self):
+		if sum(self.dimensions()) > self.showDist:
+			return "matrix: members > %i" % self.showDist
+		elif self.showDist < 0:
+			raise ValueError("Got negative show distance")
 		results = ""
 		for i in range(self.dimensions()[0]):
 			results += "["
@@ -354,6 +350,9 @@ class matrix(object):
 		for i in range(self.dimensions()[1]):
 			result.append(self[i][index])
 		return vector(result)
+
+	def getShowDistance(self):
+		return self.showDist
 
 	# trucate the matrix to the desired size by deleting components
 	def truncate(self,m = -1,n = -1):
